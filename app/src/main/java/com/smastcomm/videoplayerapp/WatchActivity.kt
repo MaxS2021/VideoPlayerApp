@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -17,6 +18,7 @@ class WatchActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityWatchBinding
     var isFullScreen = false
+    var isLock = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,13 +31,26 @@ class WatchActivity : AppCompatActivity() {
         btFullScreen.setOnClickListener {
             if(!isFullScreen) {
                 btFullScreen.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_fullscreen_exit))
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
             }
             else {
                 btFullScreen.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_fullscreen))
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             }
             isFullScreen = !isFullScreen
+        }
+
+        btLockScreen.setOnClickListener {
+            if(!isLock) {
+                btLockScreen.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_lock))
+
+            }
+            else {
+                btLockScreen.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_baseline_lock_open))
+
+            }
+            isLock = !isLock
+            lockScreen(isLock)
         }
 
         val simpleExoPlayer = ExoPlayer.Builder(this)
@@ -61,6 +76,19 @@ class WatchActivity : AppCompatActivity() {
         simpleExoPlayer.prepare()
         simpleExoPlayer.play()
 
+
+    }
+
+    private fun lockScreen(lock: Boolean) {
+        val sec_mid = findViewById<LinearLayout>(R.id.sec_controlvid1)
+        val sec_bottom = findViewById<LinearLayout>(R.id.sec_controlvid2)
+        if(lock){
+            sec_mid.visibility = View.INVISIBLE
+            sec_bottom.visibility = View.INVISIBLE
+        } else {
+            sec_mid.visibility = View.VISIBLE
+            sec_bottom.visibility = View.VISIBLE
+        }
 
     }
 }
